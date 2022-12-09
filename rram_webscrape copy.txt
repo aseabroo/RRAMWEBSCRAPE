@@ -1,0 +1,82 @@
+# Augustus Seabrooke
+# Webscraping RRAM
+# SOURCE: https://www.geeksforgeeks.org/how-to-scrape-all-pdf-files-in-a-website/
+
+# for get request of the PDF files or URL
+import requests
+# for tree traversal scraping in webpage
+from bs4 import BeautifulSoup
+# for input and output operations
+import io
+# for dynamic webscraping
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+import time
+# for getting information about the pdfs
+from PyPDF2 import PdfFileReader
+
+# website to scrape 
+url = "https://investors.csx.com/metrics/default.aspx#volume-trends"
+
+# initiating webdriver
+# driver = webdriver.Chrome('/Users/augustusseabrooke/Downloads/chromedriver')
+# driver.get(url)
+
+#ensure page is loaded
+time.sleep(5)
+
+# renders JS code and stores all of info in static html code
+html = driver.page_source 
+
+# parse hTML content
+soup = BeautifulSoup(html, "html.parser")
+
+# find the module container that contains the module links
+module_items = soup.find('div', class_="module_container module_container--content")
+# find the module links
+module_links = module_items.find_all('a')
+count = 0
+#create a set list of pdfs
+list_of_pdf = set()
+
+# for every link in the group of module links, add the link to the set
+for link in module_links:
+    # print(link.get('href'))
+    list_of_pdf.add(link.get('href'))
+    count = count + 1
+    if(count >= 32):
+        break
+driver.close()
+
+# get information on the pdf
+def info(pdf_path):
+    # used get method to get pdf file
+    response = requests.get(pdf_path)
+
+    # response.content generate binary code for string function
+    with io.BytesIO(response.content) as f:
+        # initialize the pdf
+        pdf = PdfFileReader(f)
+        page = pdf.pages[0]
+        # extracts the text of the pdf
+        content = page.extractText()
+     
+# displays content of each pdf in the set
+for i in list_of_pdf:
+    count = 0
+    info(i)
+    count + 1
+    if count == 33:
+        break
+
+# Based on how the text is placed in to the terminal, I plan on storing the 
+# data in a matrix array with rows and columns, where row 1 stores product type, carload data, and week # 
+# column 1 & row 2, 3 , ... will store the product type name value
+# column 2 & row 2, 3, .. will store the car load data value
+# column 3 & row 2, 3, .. will store the week #
+# Question: Do you want me to store 'quarter to date' and 'year to date' as well? How can I do that?
+# Next, I will display the data in graph form as a time series chart 
+# Question: Can you clarify breakdown of carload by % of total volume? for what year? 
+# Follow up question: What does that look like?
+
+
