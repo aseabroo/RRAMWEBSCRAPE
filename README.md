@@ -1,34 +1,60 @@
-# Railroad volume data scraping
+# Railroad Volume Data Scraping
 
-Python scripts for collecting weekly CSX rail volume reports, extracting PDF tables, and plotting the results. This is an exploratory project from 2022.
+A historical Python data-engineering project from 2022 that collected weekly CSX rail-volume reports, extracted PDF tables, cleaned the results, and visualized product-volume trends.
 
-## What is here
+## Portfolio role
 
-- [rram_webscrape.py](rram_webscrape.py): find report links, extract tables, clean values, and plot data.
-- [0000rram_webscrape.py](0000rram_webscrape.py): another working version with additional plotting functions and a 2022 example.
-- The PNG files are saved output from the original work. The text copies are older working copies.
+This repository is retained as a **historical data-workflow example**, not as a current production scraper. Its value is the end-to-end pipeline:
 
-The scripts use Selenium and Beautiful Soup to find reports, `tabula-py` to extract PDF tables, pandas to organize the data, and Matplotlib for plots.
+1. discover dynamically rendered report links,
+2. extract tabular data from PDFs,
+3. clean and normalize weekly values,
+4. aggregate time-series data,
+5. generate comparative plots.
+
+The original implementation reflects the tooling and source-page structure available in 2022. It is intentionally not presented as a maintained live feed.
+
+## Repository layout
+
+- `rram_webscrape.py` — primary historical scraping/analysis script.
+- `archive/rram_webscrape_2022_expanded.py` — a larger alternate version retained for provenance.
+- `examples/` — saved plots produced by the original analysis.
+
+Duplicate text copies and scratch files were removed during portfolio curation.
 
 ## Example output
 
-![Saved railroad volume plot from the original project](line_plot_.png)
+![Railroad volume time-series output](examples/line_plot.png)
 
-This is a historical output image, not a live data feed.
+## Original stack
 
-## Running it again
+The project used:
 
-This snapshot needs setup changes before a fresh run:
+- Selenium for the dynamically rendered source page
+- Beautiful Soup for link discovery
+- `tabula-py` for PDF-table extraction
+- pandas for tabular cleanup and aggregation
+- Matplotlib for visualization
 
-1. Create a Python environment and install the imported libraries: Selenium, Beautiful Soup, requests, pandas, Matplotlib, PyPDF2, and `tabula-py`. PDF extraction through `tabula-py` also needs Java.
-2. Replace the absolute ChromeDriver path in the script with a path appropriate for your machine, or update the Selenium setup.
-3. Recheck the source page selectors and PDF table coordinates. Both depend on the report layout used in 2022.
-4. Review the example at the bottom before running a script; it opens a browser and makes network requests.
+## Important limitations
 
-There is no pinned, verified environment or automated test suite yet.
+This code is a historical snapshot. A fresh run would require modernization before it should be relied on:
 
-## Next steps
+- the original script contains a machine-specific ChromeDriver path;
+- Selenium APIs have changed since the project was written;
+- the CSX page structure and CSS selectors may have changed;
+- PDF table coordinates are coupled to the 2022 report layout;
+- dependencies are not pinned;
+- the repository does not include a repeatable sample PDF or automated extraction tests.
 
-Choose one main script, save a sample PDF for repeatable extraction checks, and add tests for numeric cleanup and missing tables.
+For those reasons, the saved plots are evidence of the original analysis rather than proof that the current CSX site can still be scraped unchanged.
 
-The original scraping reference is credited in the source: [How to scrape PDF files from a website](https://www.geeksforgeeks.org/how-to-scrape-all-pdf-files-in-a-website/).
+## What I would change today
+
+A modern implementation would separate network acquisition, PDF parsing, data cleaning, and visualization into independent modules; inject browser/PDF dependencies; use fixture PDFs for deterministic tests; and avoid performing network/browser work at import time.
+
+That modernization is deliberately not being done here because the repository's role is to document earlier data-engineering work rather than become another actively maintained application.
+
+## Provenance
+
+The original source comments credit the GeeksforGeeks article *How to scrape all PDF files in a website* as a reference for PDF-link scraping. The application-specific aggregation and visualization code was built around CSX weekly volume reports.
